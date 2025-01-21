@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% block content %}  
+
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"style="color:black">Procced to Check In</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3 form-check">
+            <form action="" method="POST">
+                {% csrf_token %}
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" checked="checked">
+            <label class="form-check-label" for="exampleCheck1">Click To Procced Check In</label>
+            </form>
+        </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button"  id="save_ch" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"style="color:black">Procced to Cancel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3 form-check">
+            <form action="" method="POST">
+                {% csrf_token %}
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" checked="checked">
+            <label class="form-check-label" for="exampleCheck1">Click To Procced Cancel</label>
+            </form>
+        </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button"  id="save_ch1" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Sale & Revenue Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Today Room</p>
+                    <h6 class="mb-0">24</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Avilable Room</p>
+                    <h6 class="mb-0">4</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Room Cleaning</p>
+                    <h6 class="mb-0">4</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Booked Room</p>
+                    <h6 class="mb-0">4</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sale & Revenue End -->
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room Reservation Form</h6>
+            <button type="button" id="clear_form" class="btn btn-warning rounded-pill m-2">Clear</button>
+
+        </div>
+
+        <div class="row">
+            
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput"
+                    placeholder="Ram Shah">
+                <label for="floatingInput">  &nbsp;&nbsp; Search</label>
+            </div>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} ">{{ message }}.</div>
+           {% endfor %}
+            {% endif %}
+        <form id= "configform"action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+        <div class="row">
+            {% if form.errors %}
+            {% for field in form %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+        
+            {% endif %}
+            {% for fields in form%}
+            <div class="col-6">
+                <div class="form-floating mb-3">
+                    {{fields.label}}
+                    {{fields}}
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+      
+        <div class="row">
+            <button type="submit"  class="btn btn-warning rounded-pill m-2">Save</button>
+        </div>
+    </form>
+    </div>
+</div>
+
+<!-- Recent Sales Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room Status Managemenet </h6>
+            <form class="d-none d-md-flex ms-4">
+                <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Checkin Date </th>
+                        <th scope="col">Number of Days</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="userData">
+                    {% csrf_token %}
+                    {% for customer in customers %}
+                    <tr id="{{customer.customer_details.id}}">
+                        <td class="customerid" value="{{customer.customer_details.id}}">
+                            {{ forloop.counter}}</td>
+
+                        <td>
+                            <span class="editSpan user ">{{customer.customer_details.full_name}}</span>
+                            <input class="editInput form-control" type="text" name="user"
+                                value="{{customer.customer_details.full_name}}" style="display:none;border:none; padding:unset;color:" >
+                        </td>
+
+                        <td>{{customer.customer_details.email}}</td>
+                        <td>{{customer.customer_details.phone_number }}</td>
+
+                        <td>{{customer.customer_details.check_in}}</td>
+                        
+                        <td>{{customer.number_of_days}}</td>
+
+                        <td>{{customer.status}}</td>
+                      
+                        
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                              
+                                <button type="button" onclick="checkIn_pro({{customer.id }})" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                   Checkin
+                                  </button>
+                                  <button type="button" onclick="cancel_pro({{customer.id }})" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                                    Cancel
+                                   </button>
+                                    <a  href ="{% url "reservation_edit" customer.id%}" type="button" class="btn btn-primary">Edit</a>
+                                    {% comment %} <button type="button" class="btn btn-sm btn-success saveBtn"
+                                    style="float: none; display: none;">Save</button>
+                                <button type="button" class="btn btn-sm btn-danger confirmBtn"
+                                    style="float: none; display: none;">Confirm</button> {% endcomment %}
+                            </div>
+                            
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+
+<script>
+    $('input[type="checkbox"]').click(function () {
+        if ($(this).prop("checked") == true) {
+            $(this).val("true")
+            
+          
+        }
+        else if ($(this).prop("checked") == false) {
+            $(this).val("false")
+           
+        }
+    });
+        function checkIn_pro(a){
+            var a_ = a
+
+            var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            $("#save_ch").click(function(){
+
+
+                if($("input[type='checkbox']").prop("checked") == true){
+
+                    $.ajax({
+
+                        url: "{% url 'reservation_checkin' %}",
+                        data:{"bookd_id":a, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        method: "POST",
+                       
+                        datatype: "json",
+                        success:function(resp){
+                            $("#exampleModal").hide()
+                            location.reload(true)
+                            
+                        }
+
+
+                    });
+
+                    
+                }
+                else{
+                alert("Go Back")
+            }
+
+            })
+        
+          
+
+       
+    };
+ function cancel_pro(a){
+    var a_ = a
+
+            var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            $("#save_ch1").click(function(){
+
+
+                if($("input[type='checkbox']").prop("checked") == true){
+
+                    $.ajax({
+
+                        url: "{% url 'reservation_cancle' %}",
+                        data:{"bookd_id":a, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        method: "POST",
+                       
+                        datatype: "json",
+                        success:function(resp){
+                            $("#exampleModal2").hide()
+                            location.reload(true)
+                            
+                        }
+
+
+                    });
+
+                    
+                }
+                else{
+                alert("Go Back")
+            }
+
+            })
+
+ };
+
+
+
+
+</script>
+
+{% endblock scripts %}
+
+
+{% endblock %} 

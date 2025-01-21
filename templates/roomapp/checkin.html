@@ -1,0 +1,478 @@
+{% extends 'base.html' %}
+{% block content %}  
+<!-- Sale & Revenue Start -->
+
+<!-- Button trigger modal -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="preview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-dark" id="exampleModalLabel">Summery </h5>
+          
+        </div>
+        <div class="modal-body">
+            <div id="cus_details">
+            </div>
+         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="preview()" >Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade none-border" id="x_payment" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><strong>Pay Advance </strong></h4>
+            </div>
+            <div class="modal-body">
+                <div id="py-up">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <form id="payform">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+
+                        {% for field in form2 %}
+                        <div class="col-md-6">
+
+                            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="proced_pay"
+                            class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Proceed
+                            To Pay</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Today Room</p>
+                    <h6 class="mb-0">24</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Avilable Room</p>
+                    <h6 class="mb-0">4</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Room Cleaning</p>
+                    <h6 class="mb-0">4</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Booked Room</p>
+                    <h6 class="mb-0">4</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sale & Revenue End -->
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4" id="data-rooms">
+            <h6 class="mb-0">Check In Customer</h6>
+        
+            <h6 class="mb-0" id = "prev_room">Previous Room  </h6>
+            <h6 class="mb-0" id = "prev_room_disc">Previous room discount</h6>
+        <button type="button" id="clear_form" class="btn btn-warning rounded-pill m-2">Clear</button>
+        </div>
+
+        <div class="row">
+            <div class="form-floating mb-3">
+                <input type="text"  class="form-control" id="floatingInput"
+                    placeholder="Ram Shah">
+                <label for="floatingInput">  &nbsp;&nbsp; Search</label>
+            </div>
+           
+        </div>
+
+       
+            {% if form.errors %}
+            {% for field in form %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+        
+            {% endif %}
+
+            <form  id = "configform" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                 <div class="row updated_form">
+
+                
+
+                    {% for fields in form.visible_fields %}
+                    <div class="col-6">
+                        {{ fields.errors }}
+                        {{ fields.label_tag }}
+                        {{ fields }}
+                        {% if fields.label == "Main id"%}
+                         <div class="img_preview">
+                            <img class="file-ip-1-preview rounded mx-auto d-block" style="height: 200px;">
+                         </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="col-6" style="display:none;">
+                        {% for field in form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                <div class="col-6">
+                    <div class="">
+                        Room
+                        <select type="text" name="gc-room" class="form-control mt-2" maxlength="255"
+                            id="gc-room" required></select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="">
+                        Room Number
+                        <select type="text" name="id_room" class="form-control mt-2" name="id_room[]"
+                            maxlength="255" id="id_room" multiple="multiple" required></select>
+                    </div>
+                    
+                </div>
+                <button type="submit" class="btn btn-warning rounded-pill m-2">Save</button>
+
+            </div>
+        </form>
+            <div class="row">
+                <button  onclick="preview()" type="button" class="btn btn-primary">
+                   Preview
+                  </button>
+                       
+        </div>
+
+      
+</div>
+
+<!-- Recent Sales Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Customer Status Managemenet </h6>
+            <form class="d-none d-md-flex ms-4">
+                <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr role="row">
+                        <th>Customer Full Name</th>
+                        <th>Phone Number</th>
+                        <th>Restaurant Bills</th>
+                        <th>Rooms</th>
+                        <th>Check In </th>
+
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cus in customer_list %}
+                    <tr class="odd" role="row">
+                        <td class="sorting_1" id="user_id">{{cus.customer.full_name}}</td>
+
+                        <td>{{cus.customer.phone_number}}</td>
+
+                        <td>
+
+
+
+                        </td>
+
+                        <td> {% for r in cus.bookd_roooms.room_id.all %}
+
+                            <span
+                                class="badge badge-xs badge-success">{{r.room_number|upper}}</span>
+                            {% endfor %}
+                        </td>
+
+
+                        <td>{{cus.customer.check_in|date:"Y-m-d h : m A "}}</td>
+
+
+
+                        <td><span>
+                            <button type="button" class="btn btn-success btn-sm"
+                            onclick="ad_pay({{cus.customer.id}})" id="ad_pay">Pay Advance
+                            <span class="btn-icon-start"><i class="fas fa-money-bill-wave"></i></span>
+                        </button>
+                                <a href="{% url 'checkin_edit' cus.customer.id %}" type="button" class="btn btn-primary" >Edit  <span
+                                        class="btn-icon-start"><i class="fas fa-clipboard"></i></span></a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+
+
+var room_id = $("#id_room");
+room_id.select2({
+  placeholder: 'Select Room id'
+})
+
+
+
+var gc_room = $("#gc-room")
+gc_room.select2({
+  placeholder: 'Select room Group',
+  ajax: {
+    url: "{% url 'get_room_by_group' %}",
+    dataType: 'json',
+    processResults:function(data){
+      return{
+        results:$.map(data,function(item){
+          return {id:item.id,text:item.title}
+        })
+      }
+    },
+    
+
+  }
+})
+gc_room.on("select2:select",function(e){
+  var data = e.params.data;
+  $.ajax({
+    url:"{% url 'checkin' %}",
+    dataType:"json",
+    data:{"room":data.text},
+    success:function(resp){
+     
+     
+
+      room_id.select2({
+        // allowClear: true,
+        data:$.map(resp,function(item){
+         return {id:item.id,text:item.room_number}
+        })
+      })
+    }
+    
+  })
+  
+});
+
+});
+function ad_pay(b) {
+    $("#py-up").hide()
+
+    $('#x_payment').modal('toggle')
+    var user = b;
+
+    let csr = $("input[name=csrfmiddlewaretoken]").val()
+
+
+
+    $("#proced_pay").unbind("click").bind("click", function () {
+        var amount = $("#id_Advance_amount").val();
+        var paytype = $('#id_payment_type').find(':selected').val();
+        var remarks = $('#id_remarks').val();
+        var cred = {
+            "user": user,
+
+            "ammount": amount,
+            "paytype": paytype,
+            "remarks": remarks
+        }
+        $.ajax({
+            method: 'POST',
+            url: '{% url "checkout" %}',
+            dataType: "json",
+            headers: { "X-CSRFToken": csr, },
+            data: cred,
+            beforesend: function () {
+                $("#py-up").show()
+            },
+            success: function (response) {
+
+                if (response.message == "success") {
+                    $("#x_payment").modal('toggle');
+                    $.notify("Payment has been made ", "success");
+
+                } else {
+                    $.notify("Payments cant made !", "alert");
+                }
+
+            },
+            complete: function () {
+                console.log("done")
+                
+                $("#py-up").hide()
+
+            }
+
+        });
+        $("#payform")[0].reset();
+
+
+    });
+
+
+}
+
+function preview(){
+    $('#preview').modal('toggle')
+     var full_name =   $("#id_full_name").val();
+     var user_id=   $("#id_user").val();
+     var organization =   $("#id_organization").val();
+     var designation =   $("#id_designation").val();
+     var passport_id_number=   $("#id_passport_id_number").val();
+     var location=   $("#id_location").val();
+     var phone_number=   $("#id_phone_number").val();
+    var nationality =    $("#id_nationality").val();
+     var tel_fax=   $("#id_tel_fax").val();
+     var traval_agent=   $("#id_traval_agent").val();
+      var bill_setteled_by =  $("#id_bill_setteled_by").val();
+      var booked_by = $("#id_booked_by").val();
+      var remarks=  $("#id_remarks").val();
+    //var image_url = $("#id_main_id").wrap(`<span class="mt-3" >${data["customer"][0]['main_id']}</span>`)
+    $("#cus_details").html(
+        
+    `Full Name : ${full_name} <br>
+     Organization: ${organization}<br>
+     designation: ${designation}<br>
+     passport_id_number: ${passport_id_number}<br>
+     phone_number: ${phone_number}<br>
+     nationality: ${nationality}<br>
+     tel_fax: ${tel_fax}<br>
+     traval_agent: ${traval_agent}<br>
+     bill_setteled_by: ${bill_setteled_by}<br>
+     booked_by: ${booked_by}<br>
+     remarks: ${remarks}<br>
+
+     `
+    
+
+    )
+
+    var user_id = $("#id_ids").val()
+    console.log(user_id);
+
+    function get_info(user_id){
+        var base_url =  window.location.origin;
+        var user = user_id;
+        var csr = $("input[name=csrfmiddlewaretoken]").val();
+        cred = { "user": user }
+        $.ajax({
+            method: 'POST',
+            url: base_url+"/check_out/",
+            dataType: "json",
+            headers: { "X-CSRFToken": csr, },
+            data: cred,
+           
+            success: function (response) {
+                console.log(response)
+                var full_name = response.username
+                var room_amount = response.room_cost
+                var res_cost = response.res_cost
+                var advance_amt = response.advance_amt
+                var rem_blnce = response.remaing_balance
+                var prev_room_disc = response.room_discount
+                var prv_restu_disc = response.resturet_discount
+                var prev_rooms = response.room_number
+                let prev_r = ''
+                prev_rooms.forEach(myfunc);
+                function myfunc(value){
+                    prev_r += value + " "
+                }
+                $("#cus_details").append(`<p class="text-success">Previous rooms are: <i class="text-success h5">${prev_r}</i></p>`)
+                $("#cus_details").append(`<p class="text-dark">Previous Restaurant Discount Is: <i class="text-warning h5">${prv_restu_disc}</i></p>`)
+                $("#cus_details").append(`<p class="text-dark">Previous Room Discount Is: <i class="text-danger h5"> ${prev_room_disc}</i></p>`)
+                
+
+            },
+            complete: function () {
+                $("#py-up").hide()
+
+            }
+
+        });
+    }
+    if (user_id !== ""){
+    get_info(user_id)
+}else{
+    $("#cus_details").append(`<p class="text-dark">Previous Restaurant Discount Is: <i class="text-warning h6">User is not register yet.</i></p>`)
+   
+}
+        
+
+}
+
+
+
+</script>
+
+
+
+{% endblock scripts %}
+
+
+
+
+
+
+<!-- Recent Sales End -->
+{% endblock %} 

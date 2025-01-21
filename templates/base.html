@@ -1,0 +1,337 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Urban Family | EasyBill</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+
+    <!-- Favicon -->
+    {% comment %} <link href="{% static 'img/favicon.ico' %}" rel="icon"> {% endcomment %}
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Template Stylesheet -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-secondary navbar-dark">
+                <a href="{% url "dashboard" %}" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>UrbanFamily</h3>
+                </a>
+        
+                <div class="navbar-nav w-100">
+                    <a href="{% url "dashboard" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'dashboard' %} active {% endif %}"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="{% url "roommanager" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'roommanager' %} active {% endif %}"><i class="fa fa-th me-2"></i>Room Manager</a>
+                    <a href="{% url "reserveroom" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'reserveroom' %} active {% endif %}"><i class="fa fa-th me-2"></i>Reservation</a>
+                    <a href="{% url "checkin" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'checkin' %} active {% endif %}"><i class="fa fa-th me-2"></i>Check In</a>
+                    <a href="{% url "checkout" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'checkout' %} active {% endif %}"><i class="fa fa-th me-2"></i>Check Out</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Resturent</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'withroom' %}" class="dropdown-item">With Room</a>
+                            <a href="{% url 'withoutroom' %}" class="dropdown-item">Without Room </a>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url "report" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'report' %} active {% endif %}"><i class="fa fa-table me-2"></i>Customer Report</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'addroom' %} active {% endif %}" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Setting</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url "addroom" %}" class="dropdown-item {% if request.resolver_match.url_name == 'addroom' %} active {% endif %}">Add Room</a>
+                            <a href="signup.html" class="dropdown-item">Add User</a>                            
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                
+                <div class="navbar-nav align-items-center ms-auto">
+                   
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="{% static 'img/logo/logo.jpg' %}" alt="" style="width: 60px; height: 60px;">
+                            <span class="d-none d-lg-inline-flex">{{request.user}}</span>
+                        </a>
+                       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="#" class="dropdown-item">Settings</a>
+                            <a href="{% url 'logout'%}" class="dropdown-item">Log Out</a>
+                        </div> 
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+
+            <div class="container-fluid pt-4 px-4">                
+                    {% block content %}     
+                    {% endblock %}                 
+            </div>
+            <!-- Blank End -->
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="https://gurastech.com">Guras Technology</a>, All Right Reserved. 
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="https://gurastech.com">Guras Tech</a>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+
+
+           
+
+
+            
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/plugin/jquery-ui/notify/notify.js' %}"></script>
+    <script src="{% static 'lib/chart/chart.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/checkout.js' %}"></script>
+    
+    <script>
+        $( function() {
+            $( "#id_check_in" ).datepicker({
+                dateFormat: 'yy-mm-dd',
+            });
+
+          } );
+
+          $('#id_room').select2({
+            width: 450, 
+          });
+
+    </script>
+    <script>
+
+        $( function() {
+  
+ 
+            $( "#floatingInput" ).autocomplete({
+              source: "http://localhost:8000/customerdata/",
+              minLength: 3,
+              clearButton: true,
+              clearButtonHtml: '&times;',
+              clearButtonPosition: {
+                my: "right center",
+                at: "right center"
+              },
+              select: function( event, ui ) {
+                $.ajax({
+                  url:"http://localhost:8000/get_user/",
+                  dataType:"json",
+                  data:{"user":ui.item.value},
+                  success:function(data){
+                    console.log(data)
+                    $(".updated_form").html(data["form_value"])
+                    $("#id_ids").val(data["customer"][0]["id"])
+                    $("#id_full_name").val(data["customer"][0]["full_name"])
+                    $("#id_user").val(data["customer"][0]["user"])
+                    $("#id_organization").val(data["customer"][0]['organization'])
+                    $("#id_designation").val(data["customer"][0]['designation'])
+                    $("#id_passport_id_number").val(data["customer"][0]['passport_id_number'])
+                    $("#id_location").val(data["customer"][0]['location'])
+                    $("#id_phone_number").val(data["customer"][0]['phone_number'])
+                    $("#id_nationality").val(data["customer"][0]['nationality'])
+                    $("#id_tel_fax").val(data["customer"][0]['tel_fax'])
+                    $("#id_traval_agent").val(data["customer"][0]['traval_agent'])
+                    $("#id_bill_setteled_by").val(data["customer"][0]['bill_setteled_by'])
+                    $("#id_booked_by").val(data["customer"][0]['booked_by'])
+                    $("#id_remarks").val(data["customer"][0]['remarks'])
+                    $("#id_main_id").wrap(`<span class="mt-3" >${data["customer"][0]['main_id']}</span>`)
+                    
+                    var img = data["customer"][0]['main_id'];
+                    console.log(img)
+                    if (img.length> 0){
+                        console.log("call")
+                    var preview = $(".img_preview");
+                    preview.html(` <img class="file-ip-1-preview rounded mx-auto d-block" style="height: 200px;" src="/media/${img}">`)
+                    
+                    //preview.style.display = "block";
+
+                    }
+
+                    if (data["romms"] != null ){
+                        var a = ''
+
+                        for( var i in data["romms"]){
+                            a+=`<span>${data["romms"][i]}</span> &nbsp`
+                        };
+                        $("#prev_room").html(`Previous Rooms: ${a}`)
+
+                        
+
+                    };
+
+                    if (data["room_disc"] != null){
+                        $("#prev_room_disc").html(`Previous room discount: ${data["room_disc"]}`)
+                    };
+               
+                }
+                  
+                  
+                })
+        
+              
+               
+                
+              },
+              close: function( event, ui ) {
+                document.getElementById('configform').reset();
+                $('#id_user').val("");
+              }
+            } );
+          } );
+
+    </script>
+    <script>
+        $("#clear_form").click(function(){
+            console.log("click")
+            $('#configform')[0].reset();
+            $('#floatingInput').val("");
+        })
+    </script>
+    <script>
+
+      
+    
+        $("#orderCreate").click(function(){
+            var order_id = $("#id_order_id").val();
+            var room = $("#id_room").select2("data")[0]["text"];
+            var total = $("#id_total").val();
+
+            $.ajax({
+
+                url: "{% url 'withroom' %}",
+                data:{"order_id":order_id,
+                "room_id":room,
+                "total":total,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'},
+                method: "POST",
+               
+                datatype: "json",
+                success:function(resp){
+                    
+                 if (resp["msg"]=="ok"){
+                    $.notify("Order Create successfully ", "success");
+                    location.reload(true)
+                 }
+                                      
+                }
+
+
+            });
+
+        })
+    
+        $(document).ready( function () {
+            $('#myTable').DataTable({
+                pagingType: 'full',
+            });
+
+        } );
+   /* function showPreview(event){
+        console.log(event.target.files)
+            if(event.target.files.length > 0){
+              var src = URL.createObjectURL(event.target.files[0]);
+              var preview = document.getElementById("file-ip-1-preview");
+              preview.src = src;
+              preview.style.display = "block";
+            }
+          }*/
+    </script>
+    <script>
+        function showPreview(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.file-ip-1-preview')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+      function close_customer(){
+        $("#staticBackdrop").modal('toggle');
+      }
+    </script>
+
+</body>
+
+</html>

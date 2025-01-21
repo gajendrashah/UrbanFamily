@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade "  id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-dark"  >Check out </h5>
+
+            <span id="prev_room_disc" class=" mx-3 badge badge-lg  badge-outline-primary h5"></span>
+            <span id="prev_restu_disc" class=" mx-3 badge  badge-lg  badge-outline-success h5"></span>
+
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="background-color:black">
+            {% include "roomapp/check_out.html" %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+            <!-- <button type="button" id="calculate" class="btn btn-primary">Calculate</button> -->
+            <button type="button" id="rms_chk" class="btn btn-primary">Procced To Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!-- Modal Add Category -->
+
+<div class="container-fluid pt-4 ">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room Status Managemenet </h6>
+            <form class="d-none d-md-flex ms-4">
+                <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr role="row">
+                        <th>Customer Full Name</th>
+                        <th>Phone Number</th>
+                        <th>Restaurant Bills</th>
+                        <th>Rooms</th>
+                        <th>Check In </th>
+
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cus in customer_list %}
+                    <tr class="odd" role="row">
+                        <td class="sorting_1" id="user_id">{{cus.customer.full_name}}</td>
+
+                        <td>{{cus.customer.phone_number}}</td>
+
+                        <td>
+
+
+                            {{cus.total}}
+
+                        </td>
+
+                        <td> {% for r in cus.bookd_roooms.room_id.all %}
+
+                            <span class="badge badge-xs badge-success">{{r.room_number|upper}}</span>
+                            {% endfor %}
+                        </td>
+
+
+                        <td>{{cus.customer.check_in|date:"Y-m-d "}}-{{cus.customer.check_in|time:"G:i A"}}</td>
+
+
+
+                        <td><span>
+                                <span>
+                                   
+                                    <button type="button" onclick="ad_check({{cus.customer.id}})" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                       Check out
+                                      </button>
+                                    <a href="{% url 'checkin_edit' cus.customer.id %}" type="button"
+                                        class="btn btn-primary btn-sm">Edit <span class="btn-icon-start"><i
+                                                class="fas fa-clipboard"></i></span></a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+{% block scripts %}
+
+<script>
+
+
+</script>
+
+{% endblock scripts %}
+
+
+{% endblock content %}

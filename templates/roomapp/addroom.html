@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room Add</h6>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} ">{{ message }}.</div>
+       {% endfor %}
+        {% endif %}
+
+        <form action="" method="POST">
+
+            {% csrf_token %}
+           
+        <div class="row">
+           
+            {% for field in form %}
+            <div class="col-6">
+                <div class="form-floating mb-3">
+                    {{field}}
+                    <label for="floatingInput">{{field.label}} :</label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-warning rounded-pill m-2">Add Rooms</button>
+        </div>
+      
+    </form>
+    </div>
+</div>
+
+<!-- Recent Sales Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room Status Managemenet </h6>
+            <form class="d-none d-md-flex ms-4">
+                <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col">Group </th>
+                        <th scope="col">Room Number</th>                        
+                        <th scope="col">Room Price</th>
+                        <th scope="col">Room status </th>
+                   
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rooms in allrooms%}
+                    <tr>
+                        
+                        <td>{{rooms.group.title}}</td>
+                     <td>{{rooms.room_number}}</td>
+                     <td>{{rooms.price_pernight}}</td>
+                     <td>{{rooms.status}}</td>
+                    
+                        <td><a class="btn btn-sm btn-warning m-2" href="">Change </a><a class="btn btn-sm btn-primary " href="{% url 'room_delete' rooms.id %}"> Delete</a></td>
+                    </tr>
+                    {% endfor %}  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock content %}
+
+
+

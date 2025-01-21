@@ -1,0 +1,22 @@
+{% for fields in form.visible_fields %}
+<div class="col-6">
+    {{ fields.errors }}
+    {{ fields.label_tag }}
+    
+    {{ fields }}
+    {% if fields.label == "Main id" %}
+                       <div class="img_preview">
+                          <img class="file-ip-1-preview rounded mx-auto d-block" style="height: 200px;">
+                       </div>
+                      {% endif %}
+</div>
+{% endfor %}
+<div class="col-6" style="display:none;">
+    {% for field in form.hidden_fields %}
+    <div style="display:none;"> {{ field.errors }}
+      {{ field.label_tag }}
+      {{ field }}
+      
+  </div>
+    {% endfor %}
+

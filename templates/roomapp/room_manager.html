@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% block content %}  
+<div class="modal fade none-border" id="x_payment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><strong>Pay Advance </strong></h4>
+            </div>
+            <div class="modal-body">
+                <div id="py-up">
+                    <div class="text-center">
+                       
+                    </div>
+                </div>
+                <form id="payform">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+
+                        {% for field in form %}
+                        <div class="col-md-6">
+
+                            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="proced_pay"
+                            class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Proceed
+                            To Change status</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- Sale & Revenue Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room In Cleaning and maintenance  </h6>
+            {% if messages  %}
+        {% for message in messages %}
+        
+        <div class="alert alert-{{message.tags}} " role="alert">
+            {{message}}
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr role="row">
+                      
+                        <th>Room Number</th>
+                        <th>Room Group</th>
+                        <th>Room Price</th>
+                        <th>Room Status</th>
+                        
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody >
+                    {% for cus in rooms_mainc %}
+
+                    <tr class="odd" role="row">
+                        <td>{{cus.room_number}}</td>
+                        
+                        <td>{{cus.group|upper}}</td>
+                        <td>{{cus.price_pernight}}</td>
+                        <td>
+                        
+                            {% if cus.status == "cleaning" %}
+                            <span class="badge badge-xs badge-dark">{{cus.status|upper}}</span>
+                            {% endif %}
+                           
+                          
+                            {% if cus.status == "maintenance" %}
+                            <span class="badge badge-xs badge-warning">{{cus.status|upper}}</span>
+                            {% endif %}
+                        </td>
+
+                        
+                        <td><span>
+                            <button class="btn btn-primary" onclick="update_room({{cus.id}})" class="mr-4 update_customer" ><i class="fa fa-pencil color-muted"></i> update</button>
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Recent Sales Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Room Status Managemenet </h6>
+            {% if messages  %}
+        {% for message in messages %}
+        
+        <div class="alert alert-{{message.tags}} " role="alert">
+            {{message}}
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
+                <thead>
+                    <tr role="row">
+                      
+                        <th>Room Number</th>
+                        <th>Room Group</th>
+                        <th>Room Price</th>
+                        <th>Room Status</th>
+                        
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody >
+                    {% for cus in allrooms %}
+
+                    <tr class="odd" role="row">
+                        <td>{{cus.room_number}}</td>
+                        
+                        <td>{{cus.group|upper}}</td>
+                        <td>{{cus.price_pernight}}</td>
+                        <td>
+                            {% if cus.status == "available" %}
+                            <span class="badge badge-xs badge-success">{{cus.status|upper}}</span>
+                            {% endif %}
+                            {% if cus.status == "booked" %}
+                            <span class="badge badge-xs badge-danger">{{cus.status|upper}}</span>
+                            {% endif %}
+                            
+                            {% if cus.status == "reserved" %}
+                            <span class="badge badge-xs badge-warning">{{cus.status|upper}}</span>
+                            {% endif %}
+                            {% if cus.status == "not-confirm" %}
+                            <span class="badge badge-xs badge-warning">{{cus.status|upper}}</span>
+                            {% endif %}
+                            {% if cus.status == "cancled" %}
+                            <span class="badge badge-xs badge-warning">{{cus.status|upper}}</span>
+                            {% endif %}
+                        </td>
+
+                        
+                        <td><span>
+                            <a class="btn btn-primary" onclick="update_room({{cus.id}})" class="mr-4 update_customer" ><i class="fa fa-pencil color-muted"></i> update</a>
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+
+<script>
+
+    function update_room(b) {
+
+        $('#x_payment').modal('toggle')
+        var room_id = b;
+
+        let csr = $("input[name=csrfmiddlewaretoken]").val()
+
+
+
+        $("#proced_pay").unbind("click").bind("click", function () {
+            
+            var status = $('#id_status').find(':selected').val();
+            var cred = {
+                "room_id": room_id,
+
+                "status": status,
+
+            }
+            $.ajax({
+                method: 'POST',
+                url: '{% url "room_update" %}',
+                dataType: "json",
+                headers: { "X-CSRFToken": csr, },
+                data: cred,
+                beforesend: function () {
+                    $("#py-up").show()
+                },
+                success: function (response) {
+
+                    if (response.msg == "room updated") {
+                        $("#x_payment").modal('toggle');
+                        $.notify("Status has been made ", "success");
+                        location.reload(true)
+
+                    } else {
+                        $.notify("Status cant made !", "alert");
+                    }
+
+                },
+                complete: function () {
+                    
+                    $("#py-up").hide()
+
+                }
+
+            });
+            
+            $("#payform")[0].reset();
+
+
+        });
+    }
+
+</script>
+
+
+{% endblock scripts %}
+
+<!-- Recent Sales End -->
+{% endblock %} 

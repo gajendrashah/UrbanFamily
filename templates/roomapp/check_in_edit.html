@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-secondary rounded h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+          <h6 class="mb-0">Room Reservation Form</h6>
+          <button type="button" id="clear_form" class="btn btn-warning rounded-pill m-2">Clear</button>
+
+      </div>
+
+      <div class="row">
+          
+       
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} ">{{ message }}.</div>
+         {% endfor %}
+          {% endif %}
+      <form id= "configform"action="" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+      <div class="row">
+          {% if form.errors %}
+          {% for field in form %}
+          {% for error in field.errors %}
+          <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+          </div>
+          {% endfor %}
+          {% endfor %}
+      
+          {% for error in form.non_field_errors %}
+          <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+          </div>
+          {% endfor %}
+      
+          {% endif %}
+          {% for fields in form%}
+          <div class="col-6">
+              <div class="form-floating mb-3">
+                  {{fields.label}}
+                  {{fields}}
+                  
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+      <div class="row">
+        {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endfor %}
+    
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+    
+        {% endif %}
+        
+        {% for fields in customer_form.visible_fields %}
+                    <div class="col-6">
+                        {{ fields.errors }}
+                        {{ fields.label_tag }}
+                        {{ fields }}
+                    </div>
+                    {% endfor %}
+                    <div class="col-6" style="display:none;">
+                        {% for field in customer_form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                </div>
+        {% for fields in book_form %}
+        <div class="col-6">
+            <div class="form-floating mb-3">
+                {{fields.label}}
+                {{fields}}
+                
+            </div>
+        </div>
+      
+        {% endfor %}
+    </div>
+    
+      <div class="row">
+          <button type="submit"  class="btn btn-warning rounded-pill my-2">Save</button>
+      </div>
+  </form>
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+    
+    
+    var room_id = $("#id_room");
+    room_id.select2({
+      placeholder: 'Select Room id'
+    })
+    
+    $("#id_payment_type").select2({
+      placeholder: 'Choose Payment Type'
+    })
+    
+    var gc_room = $("#gc-room")
+    gc_room.select2({
+      placeholder: 'Select room Group',
+      ajax: {
+        url: "{% url 'get_room_by_group' %}",
+        dataType: 'json',
+        processResults:function(data){
+          return{
+            results:$.map(data,function(item){
+              return {id:item.id,text:item.title}
+            })
+          }
+        },
+        
+    
+      }
+    })
+    gc_room.on("select2:select",function(e){
+      var data = e.params.data;
+      $.ajax({
+        url:"{% url 'checkin' %}",
+        dataType:"json",
+        data:{"room":data.text},
+        success:function(resp){
+         
+         
+    
+          room_id.select2({
+            // allowClear: true,
+            data:$.map(resp,function(item){
+             return {id:item.id,text:item.room_number}
+            })
+          })
+        }
+        
+      })
+      
+    })
+    });
+    </script>
+
+
+{% endblock scripts %}
+{% endblock content %}

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded h-100 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Order Creation Form</h6>
+
+        </div>
+        <div class="row">
+            
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} ">{{ message }}.</div>
+                {% endfor %}
+                {% endif %}
+                <div class="row">
+                {% if form.errors %}
+                {% for field in form %}
+                {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+                {% endfor %}
+
+                {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+            </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                        <div class="row">
+                        {% for field in form %}
+                        <div class="form-group col-6">
+                            {{field.label}} :
+                            {{field}}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" id="orderCreate" class="btn btn-primary">Create Order</button>
+                    </div>
+
+
+                </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Customer Status Managemenet </h6>
+            <form class="d-none d-md-flex ms-4">
+                <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr role="row">
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Order Date</th>
+                        
+                        <th>Total</th>
+                        <th>Remaing amount</th>
+                        <th>Payment Mode</th>
+                        <th>Action</th>
+                
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cus in non_room_user %}
+                
+                    <tr class="odd" role="row">
+                        <td class="sorting_1" id="user_id">{{cus.order_id}}</td>
+                        <td>{{cus.full_name}}</td>
+                        <td>{{cus.phone_number}}</td>
+                        <td>{{cus.email}}</td>
+                        <td>{{cus.order_date}}</td>
+                        <td>{{cus.total}}</td>
+                        <td>{{cus.remaing_amount}}</td>
+                        <td>{{cus.Payment_mode}}</td>
+                       
+                      
+                        
+                
+                
+                
+                        <td>
+                                <a class="btn btn-primary" href="{% url 'withoutroom_update' cus.id %}"
+                                    class="my-4 update_customer"><i
+                                        class="fa fa-pencil color-muted"></i> Order Update</a>
+                                
+                                        <a class="btn btn-warning" href="{% url 'withoutroom_delete' cus.id %}"><i
+                                        class="fa fa-close color-danger"></i>Delete</a>
+                        </td>
+                    </tr>
+                
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% block scripts %}
+<script>
+
+$("#id_amount_paid").keyup(function(){
+
+    var total = $("#id_total").val();
+    var amount_paid = $("#id_amount_paid").val();
+
+    var remaing_amt = total-amount_paid
+
+
+    $("#id_remaing_amount").val(remaing_amt)
+
+})
+
+</script>
+
+{% endblock scripts %}
+
+{% endblock content %}

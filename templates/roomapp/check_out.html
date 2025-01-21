@@ -1,0 +1,153 @@
+
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-6">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 my-1">
+                            <label for="idss_full_name" class="py-1 h6">Customer Name:</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" id="idss_full_name" type="text" placeholder="Customer Full Name"
+                                readonly="">
+
+                        </div>
+                        <div class="col-md-6">
+                            <label for="idss_organization" class="py-1 h6">Room Amount:</label>
+                        </div>
+                        <div class="col-md-6 my-1">
+                            <input class="form-control" id="idss_organization" type="text" placeholder="Room cost"
+                                readonly="">
+
+                        </div>
+                        <div class="col-md-6 my-1">
+                            <label for="id_room_discount" class="py-1 h6">Room Discount:</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control ky-up" id="id_room_discount" name="room_discount"
+                                placeholder="Enter Room Discount..">
+                        </div>
+                        <div class="col-md-6 my-1">
+                            <label for="id_Resturent_amt" class="py-1 h6">Resturent Amount:</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="id_Resturent_amt" name="val-username"
+                                placeholder="Resturent Amount.." readonly="">
+
+                        </div>
+
+                        <div class="col-md-6 my-1">
+                            <label for="ids_passport_id_number" class="py-1 h6">Resturent Discount:</label>
+
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control ky-up" id="res_desc" name="val-username"
+                                placeholder="Resturent Discount..">
+
+                        </div>
+                        <div class="col-md-4 my-1">
+                            <label for="remarks" class="py-1 h6">Remarks:</label>
+
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control ky-up" id="remarks" name="val-username"
+                                placeholder="Remarks ...">
+
+                        </div>
+                            <span id="rateMe3"  class="rating-faces"></span>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div class="col-md-6 py-1">
+                            <label for="rem_blc" class="py-1 h6">Remaing Amount:</label>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <input type="text" class="form-control" id="rem_blc" name="rem_blc"
+                                placeholder="Total Ampont" readonly="">
+
+                        </div>
+
+
+
+                        <div class="col-md-6 py-1">
+                            <label for="advance_amt" class="py-1 h6">Advance Amount:</label>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <input type="text" class="form-control" id="advance_amt" name="val-username"
+                                placeholder="Total Ampont" readonly="">
+
+                        </div>
+
+                        <div id="calc-details">
+
+
+
+
+                        </div>
+                     
+
+                        <div class="col-md-6 py-1">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="check1" value="" checked="">
+                                <label class="form-check-label" for="check1">Vat(13%)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <input type="text" class="form-control" id="vat_count"  name="val-username"
+                                placeholder="After vat" readonly="">
+
+                        </div>
+
+
+
+
+
+
+
+                        <div class="col-md-6 py-1">
+                            <label for="ids_total_amt" class="py-1 h6">Payable Ammount:</label>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <input type="text" class="form-control" id="ids_total_amt" name="val-username"
+                                placeholder="Total Ampont" readonly="">
+
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <label for="last_value" class="py-1 h6">Total Amount:</label>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <input type="number" class="form-control ky-up" id="last_value" name="rem_blc"
+                                placeholder="Total Ampont" >
+
+                        </div>
+                
+
+                        <div class="col-md-6 py-1">
+                            <label for="amount_paid" class="py-1 h6">Remaing Ammount:</label>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <input type="text" class="form-control" id="amount_paid" name="val-username"
+                                placeholder="Total Ampont" readonly="">
+
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+
+

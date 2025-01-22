@@ -17,8 +17,7 @@ ENV/
 
 # Django-specific files
 db.sqlite3
-/static/
-media/
+
 
 # Migrations
 */migrations/*

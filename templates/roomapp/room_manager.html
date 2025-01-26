@@ -1,5 +1,12 @@
+
+
 {% extends 'base.html' %}
+
+{% load static %}
+
 {% block content %}  
+
+
 <div class="modal fade none-border" id="x_payment">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -115,9 +122,9 @@
           {% endif %}
         </div>
         <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
+            <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable" style="color: white;">
                 <thead>
-                    <tr role="row">
+                    <tr role="row" class="bg_custom" style="background-color: black; color: white;">
                       
                         <th>Room Number</th>
                         <th>Room Group</th>

@@ -23,13 +23,13 @@
     <!-- Libraries Stylesheet -->
     <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
     <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+    
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Template Stylesheet -->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
+    
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
@@ -38,54 +38,56 @@
 <body>
     <div class="container-fluid position-relative d-flex p-0">
         <!-- Spinner Start -->
-        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <!-- <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </div>
+        </div> -->
         <!-- Spinner End -->
 
 
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-secondary navbar-dark">
-                <a href="{% url "dashboard" %}" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>UrbanFamily</h3>
+        <nav class="navbar bg-secondary navbar-dark">
+            <a href="{% url 'dashboard' %}" class="navbar-brand mx-4 mb-3">
+                <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>UrbanFamily</h3>
+            </a>
+    
+            <div class="navbar-nav w-100">
+                <a href="{% url 'dashboard' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'dashboard' %} active {% endif %}">
+                    <i class="fa fa-home me-2"></i>Dashboard
                 </a>
-        
-                <div class="navbar-nav w-100">
-                    <a href="{% url "dashboard" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'dashboard' %} active {% endif %}"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="{% url "roommanager" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'roommanager' %} active {% endif %}"><i class="fa fa-th me-2"></i>Room Manager</a>
-                    <a href="{% url "reserveroom" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'reserveroom' %} active {% endif %}"><i class="fa fa-th me-2"></i>Reservation</a>
-                    <a href="{% url "checkin" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'checkin' %} active {% endif %}"><i class="fa fa-th me-2"></i>Check In</a>
-                    <a href="{% url "checkout" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'checkout' %} active {% endif %}"><i class="fa fa-th me-2"></i>Check Out</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Resturent</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="{% url 'withroom' %}" class="dropdown-item">With Room</a>
-                            <a href="{% url 'withoutroom' %}" class="dropdown-item">Without Room </a>
-                        </div>
-                    </div>
-                    
-                    <a href="{% url "report" %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'report' %} active {% endif %}"><i class="fa fa-table me-2"></i>Customer Report</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'addroom' %} active {% endif %}" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Setting</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="{% url "addroom" %}" class="dropdown-item {% if request.resolver_match.url_name == 'addroom' %} active {% endif %}">Add Room</a>
-                            <a href="signup.html" class="dropdown-item">Add User</a>                            
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
+                <a href="{% url 'roommanager' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'roommanager' %} active {% endif %}">
+                    <i class="fa fa-door-closed me-2"></i>Room Manager
+                </a>
+                <!-- Uncomment if needed -->
+                <!-- 
+                <a href="{% url 'reserveroom' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'reserveroom' %} active {% endif %}">
+                    <i class="fa fa-calendar-check me-2"></i>Reservation
+                </a>
+                -->
+                <a href="{% url 'checkin' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'checkin' %} active {% endif %}">
+                    <i class="fa fa-sign-in-alt me-2"></i>Check In
+                </a>
+                <a href="{% url 'checkout' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'checkout' %} active {% endif %}">
+                    <i class="fa fa-sign-out-alt me-2"></i>Check Out
+                </a>
+                <a href="{% url 'report' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'report' %} active {% endif %}">
+                    <i class="fa fa-file-alt me-2"></i>Customer
+                </a>
+            </div>
+        </nav>
+    </div>
+    
+
         <!-- Sidebar End -->
 
 
         <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+            <nav class="navbar navbar-expand navbar-dark sticky-top px-4 py-0" style="background-color: black;">
+                <a href="{% url 'dashboard' %}" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
@@ -96,11 +98,11 @@
                    
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="{% static 'img/logo/logo.jpg' %}" alt="" style="width: 60px; height: 60px;">
+                            <img class="rounded-circle me-lg-2" src="{% static 'img/logo.png' %}" alt="" style="width: 60px; height: 60px;">
                             <span class="d-none d-lg-inline-flex">{{request.user}}</span>
                         </a>
-                       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                       <div class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" style="background-color: black;">
+                            <a href="#" style="color: aliceblue;" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
                             <a href="{% url 'logout'%}" class="dropdown-item">Log Out</a>
                         </div> 
@@ -110,7 +112,7 @@
             <!-- Navbar End -->
 
 
-            <div class="container-fluid pt-4 px-4">                
+            <div class="container-fluid ">                
                     {% block content %}     
                     {% endblock %}                 
             </div>

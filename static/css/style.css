@@ -5,6 +5,9 @@
     --light: #6C7293;
 
 }
+body {
+    color: white;
+}
 
 .back-to-top {
     position: fixed;
@@ -286,4 +289,8 @@
 .testimonial-carousel .owl-dot.active {
     background: var(--dark);
     border-color: var(--primary);
+}
+
+.bg_custom {
+    background-color: black;
 }

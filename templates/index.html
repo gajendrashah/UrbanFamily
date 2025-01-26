@@ -2,6 +2,7 @@
 
 {% block content %}
 
+
             <div class="modal fade none-border" id="x_payment" >
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -45,6 +46,7 @@
             </div>
             <!-- Sale & Revenue Start -->
             <div class="container-fluid pt-4 px-4">
+
     <div class="row g-4">
         <!-- Check In -->
         <a href="{% url 'checkin' %}" class="col-sm-6 col-xl-3 btn">
@@ -57,7 +59,9 @@
         </a>
 
         <!-- Check Out -->
+
         <a href="{% url 'checkout' %}" class="col-sm-6 col-xl-3 btn">
+
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                 <i class="fas fa-sign-out-alt fa-3x text-primary"></i>
                 <div class="ms-3">
@@ -88,45 +92,52 @@
     </div>
 </div>
 
-            <!-- Sale & Revenue End -->
-
-
-      
-            <!-- Sales Chart End -->
 <div class="container-fluid pt-4 px-4">
     <div class="bg-dark text-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h6 class="mb-0">Customer Status Management</h6>
+
+
+            <p><strong>Total Cost of All Users:</strong> ${{ total_cost_all_users }}</p>
+            <p><strong>Total Advance Given by Users:</strong> ${{ total_advance_all_users }}</p>
+            <p><strong>Total Remaining Balance:</strong> ${{ total_remaining_balance_all_users }}</p>
             <form class="d-none d-md-flex ms-4">
-                <input class="form-control bg-secondary text-light border-1" style="border-color: white" type="search" placeholder="Search">
+                <input class="form-control bg-secondary text-light border-0" type="search" id="search" placeholder="Search">
             </form>
         </div>
         <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0 custom-table">
-                <thead class="table-dark">
+            <table class="table text-start align-middle table-bordered table-hover mb-0 custom-table" id="customerTable">
+                <thead class="table-light">
                     <tr role="row">
-                        <th>Customer Full Name</th>
-                        <th>Phone Number</th>
-                        <th>Restaurant Bills</th>
-                        <th>Rooms</th>
-                        <th>Check In</th>
+                        <th>Full Name</th>
+                        <th>Check-in Date</th>
+                        <th>Contact</th>
+                        <th>Room Total</th>
+                        <th>Advance</th>
+                        <th>Remaining</th>
+                        <th>Room Number</th>
+
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for cus in customer_list %}
+
+                    {% for data in customer_data %}
                     <tr class="table-row">
-                        <td class="sorting_1" id="user_id">{{cus.customer.full_name}}</td>
-                        <td>{{cus.customer.phone_number}}</td>
-                        <td></td>
+                        <td>{{ data.customer.full_name }}</td>
+                        <td>{{ data.customer.check_in }}</td>
+                        <td>{{ data.customer.phone_number }}</td>
+                        <td>{{ data.total_room_price }}</td>
+                        <td>{{ data.total_advance }}</td>
+                        <td>{{ data.remaining_balance }}</td>
                         <td>
-                            {% for r in cus.bookd_roooms.room_id.all %}
-                            <span class="badge badge-success">{{r.room_number|upper}}</span>
+                            {% for room in data.room_numbers %}
+                                {{ room }}{% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{{cus.customer.check_in|date:"Y-m-d h : m A "}}</td>
                         <td>
-                            <button type="button" class="btn btn-success btn-sm" onclick="ad_pay({{cus.customer.id}})" id="ad_pay">
+                            <button type="button" class="btn btn-success btn-sm" onclick="ad_pay({{data.customer.id}})" id="ad_pay">
+
                                 Pay Advance <i class="fas fa-money-bill-wave"></i>
                             </button>
                         </td>
@@ -137,6 +148,8 @@
         </div>
     </div>
 </div>
+
+<!-- Recent Customer Section -->
 
 <div class="container-fluid pt-4 px-4">
     <div class="bg-dark text-light text-center rounded p-4">
@@ -178,67 +191,70 @@
 </div>
 
 
+{% block scripts %}
+<script>
+    document.getElementById('search').addEventListener('keyup', function () {
+        var filter = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#customerTable tbody tr');
+        
+        rows.forEach(function(row) {
+            var name = row.querySelector('td:first-child').textContent.toLowerCase();
+            var contact = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            var roomTotal = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+            var advance = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+            var remaining = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+            
+            if (name.includes(filter) || contact.includes(filter) || roomTotal.includes(filter) || advance.includes(filter) || remaining.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
 
-       {% block scripts %}
-       
-       <script>
+    function ad_pay(b) {
+        $("#py-up").hide();
+        $('#x_payment').modal('toggle');
+        var user = b;
 
-        function ad_pay(b) {
-            $("#py-up").hide()
-        
-            $('#x_payment').modal('toggle')
-            var user = b;
-        
-            let csr = $("input[name=csrfmiddlewaretoken]").val()
-        
-        
-        
-            $("#proced_pay").unbind("click").bind("click", function () {
-                var amount = $("#id_Advance_amount").val();
-                var paytype = $('#id_payment_type').find(':selected').val();
-                var remarks = $('#id_remarks').val();
-                var cred = {
-                    "user": user,
-        
-                    "ammount": amount,
-                    "paytype": paytype,
-                    "remarks": remarks
-                }
-                $.ajax({
-                    method: 'POST',
-                    url: '{% url "checkout" %}',
-                    dataType: "json",
-                    headers: { "X-CSRFToken": csr, },
-                    data: cred,
-                    beforesend: function () {
-                        $("#py-up").show()
-                    },
-                    success: function (response) {
-        
-                        if (response.message == "success") {
-                            $("#x_payment").modal('toggle');
-                            $.notify("Payment has been made ", "success");
-        
-                        } else {
-                            $.notify("Payments cant made !", "alert");
-                        }
-        
-                    },
-                    complete: function () {
-                        
-                        $("#py-up").hide()
-        
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+
+        $("#proced_pay").unbind("click").bind("click", function () {
+            var amount = $("#id_Advance_amount").val();
+            var paytype = $('#id_payment_type').find(':selected').val();
+            var remarks = $('#id_remarks').val();
+            var cred = {
+                "user": user,
+                "ammount": amount,
+                "paytype": paytype,
+                "remarks": remarks
+            };
+            $.ajax({
+                method: 'POST',
+                url: '{% url "checkout" %}',
+                dataType: "json",
+                headers: { "X-CSRFToken": csr },
+                data: cred,
+                beforesend: function () {
+                    $("#py-up").show();
+                },
+                success: function (response) {
+                    if (response.message == "success") {
+                        $("#x_payment").modal('toggle');
+                        $.notify("Payment has been made ", "success");
+                    } else {
+                        $.notify("Payments cant made !", "alert");
                     }
-        
-                });
-                $("#payform")[0].reset();
-        
-        
+                },
+                complete: function () {
+                    $("#py-up").hide();
+                }
             });
-        }
+            $("#payform")[0].reset();
+        });
+    }
+</script>
+{% endblock scripts %}
 
-       </script>
-       
-       {% endblock scripts %} 
+{% endblock %}
 
-{% endblock %} 

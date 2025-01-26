@@ -5,9 +5,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User , auth
 from django.contrib.auth.decorators import login_required
 from django.http import Http404,JsonResponse
-from roomapp.form import Advance_paymentForm, BookedAccountupdateForm, CustomerCretionForm, CustomerCretionForm1, Non_room_OrderCreationForm, Order_creation_Non_room_user, OrderCreationForm, ReservationCreationForm, RoomCreationForm, RoomUpdateForm
-from roomapp.models import Additional_id, Advance_payment, Booked, Ch_out, Customer, Customer_list, Grouped_room, Non_room_user, Order, Room
+from .form import Advance_paymentForm, BookedAccountupdateForm, CustomerCretionForm, CustomerCretionForm1, Non_room_OrderCreationForm, Order_creation_Non_room_user, OrderCreationForm, ReservationCreationForm, RoomCreationForm, RoomUpdateForm
+from .models import Additional_id, Advance_payment, Booked, Ch_out, Customer, Customer_list, Grouped_room, Non_room_user, Order, Room
 from django.db.models import Q
+from django.db.models import Sum
+from django.utils import timezone
 
 # Create your views here.
 @login_required(login_url="signin")
@@ -15,9 +17,66 @@ def dashboard(request):
     customer_list = Customer_list.objects.filter(status=True).order_by("-bookd_roooms__booked_date")
     ad_form = Advance_paymentForm()
 
-    cus = Customer.objects.all().order_by("-check_out",)
-    context = {"customer":cus[:5],"customer_list":customer_list,"ad_form":ad_form}
-    return render(request, 'index.html',context)
+    customer_data = []  # Store customer financial details
+    total_cost_all_users = 0  # Total room cost for all customers
+    total_advance_all_users = 0  # Total advance payments for all customers
+    total_remaining_balance_all_users = 0  # Total remaining balance for all customers
+
+    for customer_entry in customer_list:
+        customer = customer_entry.customer  # Extract actual customer object
+        total_room_price = 0
+        room_numbers = []  # Store room numbers for each customer
+
+        # Get check-in date from Customer table
+        check_in = customer.check_in
+        if not check_in:
+            continue  # Skip if check-in date is missing
+
+        # Get check-out date (use current date if None)
+        check_out = customer.check_out if customer.check_out else timezone.now()
+
+        # Ensure check-in and check-out are valid
+        if isinstance(check_in, datetime) and isinstance(check_out, datetime):
+            num_days = (check_out - check_in).days
+            num_days = max(num_days, 1)  # Ensure at least 1 day
+
+            # Fetch bookings for this customer
+            bookings = Booked.objects.filter(customer_details=customer)
+
+            for booking in bookings:
+                for room in booking.room_id.all():
+                    total_room_price += num_days * float(room.price_pernight)
+                    room_numbers.append(room.room_number)  # Add room number to the list
+
+        # Calculate total advance payments
+        total_advance = Advance_payment.objects.filter(customer=customer).aggregate(
+            total_advance=Sum('Advance_amount')
+        )['total_advance'] or 0
+
+        remaining_balance = round(total_room_price - total_advance, 2)
+        
+
+        customer_data.append({
+            "customer": customer,
+            "total_room_price": total_room_price,
+            "total_advance": total_advance,
+            "remaining_balance": remaining_balance,
+            "room_numbers": room_numbers,  # Include room numbers
+        })
+
+        # Aggregate totals for all customers
+        total_cost_all_users += total_room_price
+        total_advance_all_users += total_advance
+        total_remaining_balance_all_users += remaining_balance
+
+    context = {
+        "customer_data": customer_data,
+        "ad_form": ad_form,
+        "total_cost_all_users": total_cost_all_users,
+        "total_advance_all_users": total_advance_all_users,
+        "total_remaining_balance_all_users": total_remaining_balance_all_users,
+    }
+    return render(request, 'index.html', context)
 
 
 
@@ -129,7 +188,13 @@ def checkin(request):
         return JsonResponse(list(room),safe=False)
     total_rooms = Room.objects.count()
     available_count = Room.objects.filter(status="available").count()
-    context={"customer_list":customer_list,"form":form,"form2":ad_form, 'total_rooms': total_rooms, 'available_count': available_count, }
+
+    cleaning_count = Room.objects.filter(status="cleaning").count()
+    booked_count = Room.objects.filter(status="booked").count()
+    context={"customer_list":customer_list,"form":form,"form2":ad_form, 'total_rooms': total_rooms, 'available_count': available_count,
+             'cleaning_count':cleaning_count, 'booked_count': booked_count, 
+             }
+
     return render(request, 'roomapp/checkin.html',context)
 
 def checkin_edit(request,pk):

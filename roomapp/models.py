@@ -41,9 +41,12 @@ class Customer(models.Model):
     @property
     def total_room_cost(self):
         """Calculate the total cost of rooms booked by the customer."""
-        total_cost = Booked.objects.filter(customer_details=self).annotate(
-            room_cost=Sum('room_id__price_pernight')
-        ).aggregate(Sum('room_cost'))['room_cost__sum'] or 0
+        total_cost = 0
+        bookings = Booked.objects.filter(customer_details=self)
+        for booking in bookings:
+            for room in booking.room_id.all():
+                total_days = (date.today() - self.check_in.date()).days
+                total_cost += float(room.price_pernight) * total_days
         return total_cost
 
     @property
@@ -142,7 +145,7 @@ class Advance_payment(models.Model):
         ("Other", "Other"),
     )
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
-    Advance_amount = models.CharField(max_length=255, blank=True)
+    Advance_amount = models.IntegerField()
     payment_day = models.DateTimeField(auto_now_add=True)
     payment_mode = models.CharField(max_length=255, choices=Payment_mode, default="available")
     remarks = models.CharField(max_length=255, blank=True)
@@ -246,3 +249,4 @@ class Non_room_user(models.Model):
 
     def __str__(self):
         return f'{self.order_id} {self.full_name}'
+

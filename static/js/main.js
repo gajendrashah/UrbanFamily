@@ -1,212 +1,162 @@
-(function ($) {
-    "use strict";
+   
+    function ad_check(a) {
+        var base_url =  window.location.origin;
+        var user = a;
+        var csr = $("input[name=csrfmiddlewaretoken]").val();
+        cred = { "user": user }
+        $.ajax({
+            method: 'POST',
+            url: base_url+"/check_out/",
+            dataType: "json",
+            headers: { "X-CSRFToken": csr, },
+            data: cred,
+            beforesend: function () {
+                $("#py-up").show()
+            },
+            success: function (response) {
 
-    // Spinner
-    var spinner = function () {
-        setTimeout(function () {
-            if ($('#spinner').length > 0) {
-                $('#spinner').removeClass('show');
+                var full_name = response.username
+                var room_amount = response.room_cost
+                var res_cost = response.res_cost
+                var advance_amt = response.advance_amt
+                var rem_blnce = response.remaing_balance
+                var prev_room_disc = response.room_discount
+                var prv_restu_disc = response.resturet_discount
+                $("#prev_restu_disc").html(`<p class="text-dark">Previous Restaurant Discount Is: <i class="text-warning h5">${prv_restu_disc}</i></p>`)
+                $("#prev_room_disc").html(`<p class="text-dark">Previous Room Discount Is: <i class="text-danger h5"> ${prev_room_disc}</i></p>`)
+                $("#idss_full_name").val(full_name)
+                $("#rem_blc").val(rem_blnce)
+                $("#idss_organization").val(room_amount)
+                $("#id_Resturent_amt").val(res_cost)
+                $("#advance_amt").val(advance_amt)
+                $("#res_desc").val(0)
+                $("#id_room_discount").val(0)
+
+            },
+            complete: function () {
+                $("#py-up").hide()
+
             }
-        }, 1);
-    };
-    spinner();
-    
-    
-    // Back to top button
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.back-to-top').fadeIn('slow');
-        } else {
-            $('.back-to-top').fadeOut('slow');
-        }
-    });
-    $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
-        return false;
-    });
 
-
-    // Sidebar Toggler
-    $('.sidebar-toggler').click(function () {
-        $('.sidebar, .content').toggleClass("open");
-        return false;
-    });
-
-
-    // Progress Bar
-    $('.pg-bar').waypoint(function () {
-        $('.progress .progress-bar').each(function () {
-            $(this).css("width", $(this).attr("aria-valuenow") + '%');
         });
-    }, {offset: '80%'});
-
-
-    // Calender
-    $('#calender').datetimepicker({
-        inline: true,
-        format: 'L'
-    });
-
-
-    // Testimonials carousel
-    $(".testimonial-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        items: 1,
-        dots: true,
-        loop: true,
-        nav : false
-    });
-
-
-    // Chart Global Color
-    Chart.defaults.color = "#6C7293";
-    Chart.defaults.borderColor = "#000000";
-
-
-    // Worldwide Sales Chart
-    var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
-    var myChart1 = new Chart(ctx1, {
-        type: "bar",
-        data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
-            datasets: [{
-                    label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
-                    backgroundColor: "rgba(235, 22, 22, .7)"
-                },
-                {
-                    label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
-                    backgroundColor: "rgba(235, 22, 22, .5)"
-                },
-                {
-                    label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
-                    backgroundColor: "rgba(235, 22, 22, .3)"
-                }
-            ]
-            },
-        options: {
-            responsive: true
+        $(".ky-up").keypress(function () {
+            var output = '';
+            
+            var rm_dis = $("#id_room_discount").val()
+            var checkbox_r = $("#check1").prop("checked");
+            var room_amount = $("#idss_organization").val();
+            var res_cost = $("#id_Resturent_amt").val();
+            var res_disc = $("#res_desc").val()
+            var advance_amt = $("#advance_amt").val();
+            var vat = $("#vat_count").val()
+            var room_discount = $("#room-discount").val()
+            var resturent_discount = $("#resturent_discount").val()
+            var rem_blc = $("#rem_blc").val()
+            if (rm_dis !== "" && res_cost !== "") {
+                var room_disc = parseFloat(room_amount) - parseFloat(rm_dis)
+                var res_desc = parseFloat(res_cost) - parseFloat(res_disc)
+                var after_disc = room_disc + res_desc
+                
+            }
+            if (checkbox_r===true){
+                $("#vat_count").val(after_disc * 13 / 100)
+            }else{  
+                $("#vat_count").val(0)
+            }
+            
+            
+            $('input[type="checkbox"]').click(function () {
+        if ($(this).prop("checked") == true) {
+           
+            $("#vat_count").val(after_disc * 13 / 100)
+        }
+        else if ($(this).prop("checked") == false) {
+            $("#vat_count").val(0)
+           
+       
         }
     });
-
-
-    // Salse & Revenue Chart
-    var ctx2 = $("#salse-revenue").get(0).getContext("2d");
-    var myChart2 = new Chart(ctx2, {
-        type: "line",
-        data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
-            datasets: [{
-                    label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
-                    backgroundColor: "rgba(235, 22, 22, .7)",
-                    fill: true
-                },
-                {
-                    label: "Revenue",
-                    data: [99, 135, 170, 130, 190, 180, 270],
-                    backgroundColor: "rgba(235, 22, 22, .5)",
-                    fill: true
-                }
-            ]
-            },
-        options: {
-            responsive: true
-        }
-    });
+    var payable_amt = ((parseFloat(room_discount) + parseFloat(vat) + parseFloat(resturent_discount) + parseFloat(rem_blc) - parseFloat(advance_amt)))
+    $("#ids_total_amt").val(payable_amt)
+    var amount_paid = payable_amt - parseFloat($("#last_value").val())
+    $("#amount_paid").val(amount_paid)
     
+    var inner_data = `  
+<div class="row" id ="get_data" >
+<div class="col-md-6 py-1">
+<label for="advance_amt" class="py-1 h6">Room Discount:</label>
+</div>
+<div class="col-md-6 py-1">
+<input type="text" class="form-control"  value = "${room_disc}" id="room-discount" name="room-discount"
+placeholder="" readonly="">
+
+</div>
+
+<div class="col-md-6 py-1">
+<label for="resturent_discount" class="py-1 h6">Resturenr Discount:</label>
+</div>
+<div class="col-md-6 py-1">
+<input type="text" class="form-control" value = "${res_desc}" id="resturent_discount" name="resturent_discount"
+placeholder="" readonly="">
+
+</div>
+</div>
+
+`
+
+output += $("#calc-details").html(inner_data)
+           
 
 
-    // Single Line Chart
-    var ctx3 = $("#line-chart").get(0).getContext("2d");
-    var myChart3 = new Chart(ctx3, {
-        type: "line",
-        data: {
-            labels: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150],
-            datasets: [{
-                label: "Salse",
-                fill: false,
-                backgroundColor: "rgba(235, 22, 22, .7)",
-                data: [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
+        });
+        
+        
+        $("#rms_chk").unbind("click").bind("click", function () {
+            var user = a;
+            var resturent_discount = $("#res_desc").val()
+            var room_discount = $("#id_room_discount").val()
+            var vat = $("#vat_count").val()
+            var remarks = $("#remarks").val()
+            var remaing_amt = $("#amount_paid").val()
 
 
-    // Single Bar Chart
-    var ctx4 = $("#bar-chart").get(0).getContext("2d");
-    var myChart4 = new Chart(ctx4, {
-        type: "bar",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(235, 22, 22, .7)",
-                    "rgba(235, 22, 22, .6)",
-                    "rgba(235, 22, 22, .5)",
-                    "rgba(235, 22, 22, .4)",
-                    "rgba(235, 22, 22, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
+            var csr = $("input[name=csrfmiddlewaretoken]").val();
+            data = {
+                "user": a, "resturent_discount": resturent_discount,
+                "room_discount": room_discount, "vat": vat, "remarks": remarks, "remaing_amt": remaing_amt
+            }
+            $.ajax({
+                method: 'POST',
+                url: base_url + "/check_out_process/",
+                dataType: "json",
+                headers: { "X-CSRFToken": csr, },
+                data: data,
+                success: function (resp) {
+                    if (resp.msg = "User Check Out sucessfully"){
+                        // $("#staticBackdrop").modal('toggle');
+                        // $.notify("User checkout successfully ", "success");
+
+                        window.location.replace(base_url)
+                       
+                        
+                    }else{
+                        $("#brek_point").modal('toggle');
+                        $.notify("User Cant checkout !!! ", "success");
+                    }
+                  
+                   
+                },
+                error:function(){
+                    $.notify("User cant checkou plase fill the empty value ", "error");
+                        
+                }
+            })
 
 
-    // Pie Chart
-    var ctx5 = $("#pie-chart").get(0).getContext("2d");
-    var myChart5 = new Chart(ctx5, {
-        type: "pie",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(235, 22, 22, .7)",
-                    "rgba(235, 22, 22, .6)",
-                    "rgba(235, 22, 22, .5)",
-                    "rgba(235, 22, 22, .4)",
-                    "rgba(235, 22, 22, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
 
 
-    // Doughnut Chart
-    var ctx6 = $("#doughnut-chart").get(0).getContext("2d");
-    var myChart6 = new Chart(ctx6, {
-        type: "doughnut",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(235, 22, 22, .7)",
-                    "rgba(235, 22, 22, .6)",
-                    "rgba(235, 22, 22, .5)",
-                    "rgba(235, 22, 22, .4)",
-                    "rgba(235, 22, 22, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
 
-    
-})(jQuery);
 
+        });
+
+    }

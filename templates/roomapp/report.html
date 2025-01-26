@@ -1,273 +1,203 @@
 {% extends 'base.html' %}
 {% block content %}  
 <!-- Sale & Revenue Start -->
-<div class="modal fade bd-example-modal-lg"  id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title text-dark"  >Check out </h5>
-
-            <span id="prev_room_disc" class=" mx-3 badge badge-lg  badge-outline-primary h5"></span>
-            <span id="prev_restu_disc" class=" mx-3 badge  badge-lg  badge-outline-success h5"></span>
-
-
-            <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
-            </button>
-        </div>
-        <div class="modal-body" style="background-color:black">
-            <div class="col-sm-12 ">
-                <div class="bg-secondary rounded h-100 p-4">
-                    <h6 class="mb-4" id ="basic_acc"></h6>
-                    <div class="accordion" id="accordionExample">
-                      
-                       
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Check Out</h5>
+                <span id="prev_room_disc" class="mx-3 badge badge-primary h5"></span>
+                <span id="prev_restu_disc" class="mx-3 badge badge-success h5"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-dark text-light">
+                <div class="col-sm-12">
+                    <div class="bg-secondary rounded h-100 p-4">
+                        <h6 class="mb-4" id="basic_acc"></h6>
+                        <div class="accordion" id="accordionExample"></div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="close_customer()">Close</button>
-            <!-- <button type="button" id="calculate" class="btn btn-primary">Calculate</button> -->
-            <button type="button" id="rms_chk" class="btn btn-primary">Procced To Checkout</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-line fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Today Room</p>
-                    <h6 class="mb-0">24</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Avilable Room</p>
-                    <h6 class="mb-0">4</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-area fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Room Cleaning</p>
-                    <h6 class="mb-0">4</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Booked Room</p>
-                    <h6 class="mb-0">4</h6>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="close_customer()">Close</button>
+                <button type="button" id="rms_chk" class="btn btn-primary">Proceed to Checkout</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        {% for stat, icon, label, count in stats %}
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa {{ icon }} fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">{{ label }}</p>
+                    <h6 class="mb-0">{{ count }}</h6>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 <!-- Sale & Revenue End -->
+
 <!-- Recent Sales Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="bg-secondary text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Room Status Managemenet </h6>
-            {% if messages  %}
-        {% for message in messages %}
-        
-        <div class="alert alert-{{message.tags}} " role="alert">
-            {{message}}
-          </div>
-          {% endfor %}
-          {% endif %}
+            <h6 class="mb-0">Room Status Management</h6>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
         </div>
         <div class="table-responsive">
-            <table class="table text-start  table-bordered table-hover mb-0" id="myTable">
-                <thead>
-                    <tr role="row">
-                      
-                        <th>Full name</th>
+            <table class="table futuristic-table table-hover table-bordered text-center" id="myTable" style="color: white;">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Full Name</th>
                         <th>Phone Number</th>
                         <th>Email</th>
-                        <th>location</th>
+                        <th>Location</th>
                         <th>IDs</th>
-                        <th> Booked By </th>
-                        <th> Checkin </th>
-                        <th> Check Out </th>
-                        <th>Action</th>
-
+                        <th>Booked By</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
                     </tr>
                 </thead>
-                <tbody >
+                <tbody>
                     {% for cus in customer %}
-
-                    <tr class="odd" role="row">
-                        <td>{{cus.full_name}}</td>
-                        
-                        <td>{{cus.phone_number|upper}}</td>
-                        <td>{{cus.email}}</td>
-                        <td>
-                            {{cus.location|truncatechars:10}}
-                        </td>
-                        <td>{{cus.passport_id_number}}</td>
-                        <td>{{cus.booked_by}}</td>
-                        <td>{{cus.check_in}}</td>
-                        <td>{{cus.check_out}}</td>
-                        
-                        <td>
-                            <a class="btn btn-primary btn-sm" onclick="generatereport({{cus.id}})" class="update_customer" > update</a>
-                          
-                        </td>
+                    <tr style="color: white;">
+                        <td>{{ cus.full_name }}</td>
+                        <td>{{ cus.phone_number|upper }}</td>
+                        <td>{{ cus.email }}</td>
+                        <td>{{ cus.location|truncatechars:10 }}</td>
+                        <td>{{ cus.passport_id_number }}</td>
+                        <td>{{ cus.booked_by }}</td>
+                        <td>{{ cus.check_in }}</td>
+                        <td>{{ cus.check_out }}</td>
                     </tr>
-
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<style>
+.futuristic-table {
+    background: linear-gradient(135deg, #1f1f1f, #292929);
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.futuristic-table thead {
+    background: hsl(223, 51%, 39%);
+    color: #00e7ff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.futuristic-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.futuristic-table tbody tr:hover {
+    background: rgba(0, 231, 255, 0.1);
+    transform: scale(1.01);
+}
+
+.futuristic-table td, .futuristic-table th {
+    padding: 15px;
+    border: 1px solid #555;
+}
+</style>
+
 {% block script %}
 <script>
-    function getCookie(name) {
-        let cookieValue = null;
-    
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-    
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    
-                    break;
-                }
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
-    
-        return cookieValue;
-    };
-function generatereport(a){
-    $("#staticBackdrop").modal('toggle')
-    var user = a;
-    console.log(user)
-        var output = ""
-        let csr = getCookie("csrftoken")  ;
-        var status = $('#id_status').find(':selected').val();
-        var cred = {
-            "user": user,}
-        
-        
-            
-        $.ajax({
-            method: 'POST',
-            url: '{% url "report_gen" %}',
-            dataType: "json",
-            headers: { "X-CSRFToken": csr, },
-            data: cred,
-            beforesend: function () {
-                $("#py-up").show()
-            },
-            success: function (response) {
-                console.log(response.data)
-                if (response.msg == "scccess") {
-                    $("#x_payment").modal('toggle');
-                    $.notify("Data has been made ", "success");
-                    var list = response.data;
-                    var full_name = list[0]["full_name"];
-                    var email = list[0]["email"];
-                    var location = list[0]["location"];
-                    var phone_number = list[0]["phone_number"];
-                    var passport_id_number = list[0]["passport_id_number"];
-                    var tel_fax = list[0]["tel_fax"];
-                    var traval_agent = list[0]["traval_agent"];
-                    var main_id = list[0]["main_id"];
-                    var check_in = list[0]["check_in"];
-                    var check_out = list[0]["check_out"];
+    }
+    return cookieValue;
+}
 
-                    $("#basic_acc").html(`
+function generatereport(a) {
+    $("#staticBackdrop").modal('toggle');
+    const user = a;
+    const csr = getCookie("csrftoken");
+    const cred = { "user": user };
+
+    $.ajax({
+        method: 'POST',
+        url: '{% url "report_gen" %}',
+        dataType: "json",
+        headers: { "X-CSRFToken": csr },
+        data: cred,
+        beforeSend: function () {
+            $("#py-up").show();
+        },
+        success: function (response) {
+            if (response.msg === "success") {
+                const { data: [details], bills } = response;
+
+                $("#basic_acc").html(`
                     <div class="d-flex align-items-center border-bottom py-3">
-                        <img class="rounded-circle flex-shrink-0" src="${window.location.origin+"/media" +"/"+ main_id}" alt="" style="width: 40px; height: 40px;">
-                        <div class="w-100 ms-3">
-                            <div class="d-flex w-100 justify-content-center">
-                                <h6 class="mb-0">Full Name: ${full_name}</h6>
-                                <small>Email :${email} </small>
-                                <small>location :${location} </small>
-                            </div>
-                            <div class="d-flex w-100 justify-content-center">
-                                <h6 class="mb-0">Phone number: ${phone_number}</h6>
-                                <small>passport_id_number :${passport_id_number} </small>
-                                <small>traval_agent :${traval_agent} </small>
-                            </div>
-                            <div class="d-flex w-100 justify-content-center">
-                                <h6 class="mb-0">check in: ${check_in}</h6>
-                                <small>passport_id_number :${passport_id_number} </small>
-                                <small>checkout :${check_out} </small>
-                            </div>
-                            
+                        <img class="rounded-circle" src="${window.location.origin}/media/${details.main_id}" alt="" style="width: 40px; height: 40px;">
+                        <div class="ms-3">
+                            <p><strong>Full Name:</strong> ${details.full_name}</p>
+                            <p><strong>Email:</strong> ${details.email}</p>
+                            <p><strong>Location:</strong> ${details.location}</p>
+                            <p><strong>Phone:</strong> ${details.phone_number}</p>
+                            <p><strong>Passport ID:</strong> ${details.passport_id_number}</p>
+                            <p><strong>Agent:</strong> ${details.traval_agent}</p>
+                            <p><strong>Check-in:</strong> ${details.check_in}</p>
+                            <p><strong>Check-out:</strong> ${details.check_out}</p>
                         </div>
                     </div>
-                    
+                `);
 
-                    
-                    `)
-                    console.log("this is ",response.bills)
-                   var x= response.bills
-                   console.log(x)
-                   for (var i in x){
-
-
-              
-                    output += `<div class="accordion-item bg-transparent">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true"
-                                aria-controls="collapseOne">
-                                <p> Check in date : ${x[i]}</p>
-                               ${x[i]["resturent discount"]}
+                const output = bills.map((bill, index) => `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading${index}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+                                <p>Check-in Date: ${bill.check_in_date}</p>
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show"
-                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                Gubergren justo eos magna eirmod lorem magna, amet dolores ipsum sadipscing ipsum consetetur invidunt et clita diam, vero dolor dolor est eirmod. Rebum accusam amet ipsum et. Et et lorem sanctus amet eos eos elitr ea, sanctus magna et et sed eos sit takimata sadipscing, dolor rebum sed stet vero.
+                                ${bill.details}
                             </div>
                         </div>
-                    </div>`
-              
+                    </div>
+                `).join('');
 
-                   }
-                $("#accordionExample").html(output)
-                } 
-                
-                else {
-                    $.notify("Status cant made !", "alert");
-                }
-
-            },
-            complete: function () {
-                console.log("done")
-                
-                $("#py-up").hide()
-
+                $("#accordionExample").html(output);
+            } else {
+                $.notify("Failed to fetch data!", "error");
             }
-
-        });
-    }   
-
-
+        },
+        complete: function () {
+            $("#py-up").hide();
+        }
+    });
+}
 </script>
-
-
 {% endblock script %}
 
-{% endblock %} 
+{% endblock %}

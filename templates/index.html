@@ -2,41 +2,51 @@
 
 {% block content %}
 
-<div class="modal fade none-border" id="x_payment" >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title"><strong>Pay Advance </strong></h4>
-            </div>
-            <div class="modal-body">
-                <div id="py-up">
-                    <div class="text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading...</span>
+
+            <div class="modal fade none-border" id="x_payment" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title"><strong>Pay Advance </strong></h4>
                         </div>
+                        <div class="modal-body">
+                            <div id="py-up">
+                                <div class="text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <form id="payform">
+            
+                                {% csrf_token %}
+            
+                                <div class="row">
+            
+            
+                                    {% for field in ad_form %}
+                                    <div class="col-md-6">
+            
+                                        <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                                        {{ field }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="proced_pay"
+                                        class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Proceed
+                                        To Pay</button>
+                                </div>
+                            </form>
+                        </div>
+            
+            
                     </div>
                 </div>
-                <form id="payform">
-                    {% csrf_token %}
-                    <div class="row">
-                        {% for field in ad_form %}
-                        <div class="col-md-6">
-                            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="proced_pay" class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Proceed To Pay</button>
-                    </div>
-                </form>
             </div>
-        </div>
-    </div>
-</div>
+            <!-- Sale & Revenue Start -->
+            <div class="container-fluid pt-4 px-4">
 
-<!-- Sale & Revenue Start -->
-<div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <!-- Check In -->
         <a href="{% url 'checkin' %}" class="col-sm-6 col-xl-3 btn">
@@ -49,7 +59,9 @@
         </a>
 
         <!-- Check Out -->
-        <a href="{% url 'check_out' %}" class="col-sm-6 col-xl-3 btn">
+
+        <a href="{% url 'checkout' %}" class="col-sm-6 col-xl-3 btn">
+
             <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                 <i class="fas fa-sign-out-alt fa-3x text-primary"></i>
                 <div class="ms-3">
@@ -80,12 +92,12 @@
     </div>
 </div>
 
-<!-- Sale & Revenue End -->
-<!-- Customer Status Management -->
 <div class="container-fluid pt-4 px-4">
     <div class="bg-dark text-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h6 class="mb-0">Customer Status Management</h6>
+
+
             <p><strong>Total Cost of All Users:</strong> ${{ total_cost_all_users }}</p>
             <p><strong>Total Advance Given by Users:</strong> ${{ total_advance_all_users }}</p>
             <p><strong>Total Remaining Balance:</strong> ${{ total_remaining_balance_all_users }}</p>
@@ -104,10 +116,12 @@
                         <th>Advance</th>
                         <th>Remaining</th>
                         <th>Room Number</th>
+
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+
                     {% for data in customer_data %}
                     <tr class="table-row">
                         <td>{{ data.customer.full_name }}</td>
@@ -123,6 +137,7 @@
                         </td>
                         <td>
                             <button type="button" class="btn btn-success btn-sm" onclick="ad_pay({{data.customer.id}})" id="ad_pay">
+
                                 Pay Advance <i class="fas fa-money-bill-wave"></i>
                             </button>
                         </td>
@@ -135,6 +150,7 @@
 </div>
 
 <!-- Recent Customer Section -->
+
 <div class="container-fluid pt-4 px-4">
     <div class="bg-dark text-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -173,6 +189,7 @@
         </div>
     </div>
 </div>
+
 
 {% block scripts %}
 <script>
@@ -240,3 +257,4 @@
 {% endblock scripts %}
 
 {% endblock %}
+

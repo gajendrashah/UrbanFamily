@@ -188,11 +188,13 @@ def checkin(request):
         return JsonResponse(list(room),safe=False)
     total_rooms = Room.objects.count()
     available_count = Room.objects.filter(status="available").count()
+
     cleaning_count = Room.objects.filter(status="cleaning").count()
     booked_count = Room.objects.filter(status="booked").count()
     context={"customer_list":customer_list,"form":form,"form2":ad_form, 'total_rooms': total_rooms, 'available_count': available_count,
              'cleaning_count':cleaning_count, 'booked_count': booked_count, 
              }
+
     return render(request, 'roomapp/checkin.html',context)
 
 def checkin_edit(request,pk):

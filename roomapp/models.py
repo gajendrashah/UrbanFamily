@@ -3,6 +3,7 @@ import random
 import string
 from datetime import date, timedelta
 from django.db.models import Sum
+import nepali_datetime
 
 # Utility functions
 def random_string_generator(size=6, chars=string.ascii_lowercase + string.digits):
@@ -28,6 +29,11 @@ class Customer(models.Model):
     check_in = models.DateTimeField(auto_now=False, null=True)
     check_out = models.DateTimeField(auto_now=False, null=True, blank=True)
     main_id = models.ImageField(upload_to="customer/id", null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if isinstance(self.check_in, str):
+            self.check_in = nepali_datetime.date.from_str(self.check_in).to_datetime().date()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.full_name

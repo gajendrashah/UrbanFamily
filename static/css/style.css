@@ -290,3 +290,7 @@ body {
     background: var(--dark);
     border-color: var(--primary);
 }
+
+.bg_custom {
+    background-color: black;
+}
